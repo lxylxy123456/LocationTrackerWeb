@@ -20,11 +20,9 @@ A web page that allows user to track and export their current location.
 
 ## Demo
 
-Screenshot:
-(coming soon)
+Screenshot: ![demo.png](demo.png)
 
-Gif:
-(coming soon)
+Gif: ![demo.gif](demo.gif)
 
 Watch on Youtube:
 [![el0oN_0p9EM](https://img.youtube.com/vi/el0oN_0p9EM/0.jpg)](https://www.youtube.com/watch?v=el0oN_0p9EM)
