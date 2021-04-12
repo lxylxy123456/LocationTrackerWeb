@@ -237,7 +237,6 @@
 		const f64arr = new Float64Array(i16arr.buffer);
 		let data = Array.from(f64arr);
 		for (let i = data.length - 1; i >= 0; i--) {
-			console.log(isnan);
 			if (isnan & 1) {
 				data[i] = NaN;
 			}
@@ -289,39 +288,37 @@
 	// Handle local storage
 	const LOCAL_KEY_PREFIX = 'LocationTracker:';
 	const LOCAL_KEY_LEN = LOCAL_KEY_PREFIX.length;
-	function store_local_data(t, s) {
+	function store_local_data(t, s, i) {
 		if (!local_save)
 			return;
 		try {
-			window.localStorage.setItem(LOCAL_KEY_PREFIX + t, s);
+			window.localStorage.setItem(LOCAL_KEY_PREFIX + t + '|' + i, s);
 		} catch (error) {
 			answer3.value += 'Error storing to local storage at ' + t + '\n';
 		}
 	}
 	function show_storage() {
+		// Collect relevant data in 
 		let values = [];
 		for (let i = 0; i < window.localStorage.length; i++) {
 			const key = window.localStorage.key(i);
 			if (key.startsWith(LOCAL_KEY_PREFIX)) {
-				const time = key.substr(LOCAL_KEY_LEN);
+				const [time, index] = key.substr(LOCAL_KEY_LEN).split('|');
 				const data = bytes2data(window.localStorage.getItem(key));
-				values[values.length] = data2str(time, data);
+				values[values.length] = [
+					parseInt(time), parseInt(index), data2str(time, data)];
 			}
 		}
 		function cmp(first, second) {
-			const f = parseInt(first.substr(2, first.indexOf(',') - 2));
-			const s = parseInt(second.substr(2, second.indexOf(',') - 2));
-			if (f < s) {
-				return -1;
-			} else if (f > s) {
-				return 1;
-			} else {
-				return 0;
-			}
+			if (first[0] < second[0])      return -1;
+			else if (first[0] > second[0]) return 1;
+			else if (first[1] < second[1]) return -1;
+			else if (first[1] > second[1]) return 1;
+			else                           return 0;
 		}
 		values.sort(cmp);
 		for (let i = 0; i < values.length; i++) {
-			answer3.value += values[i];
+			answer3.value += values[i][2];
 		}
 	}
 	function clear_storage() {
@@ -337,10 +334,12 @@
 			for (let i = 0; i < keys.length; i++) {
 				window.localStorage.removeItem(keys[i]);
 			}
+			answer3.value += 'Done\n';
 		}
 	}
 	// Fetch and display location data
 	let watchLocation_confirm = false;
+	let record_index = 0;
 	function showPosition(position) {
 		const coords = position.coords;
 		const time = Date.now().toString();
@@ -349,7 +348,8 @@
 		display_data(data);
 		answer.value += str;
 		// Save data to localStorage
-		store_local_data(time, data2bytes(data));
+		store_local_data(time, data2bytes(data), record_index);
+		record_index++;
 	}
 	function exit_refrain() {
 		window.onbeforeunload = function () {
