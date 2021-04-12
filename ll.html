@@ -311,7 +311,13 @@
 		function cmp(first, second) {
 			const f = parseInt(first.substr(2, first.indexOf(',') - 2));
 			const s = parseInt(second.substr(2, second.indexOf(',') - 2));
-			return f < s;
+			if (f < s) {
+				return -1;
+			} else if (f > s) {
+				return 1;
+			} else {
+				return 0;
+			}
 		}
 		values.sort(cmp);
 		for (let i = 0; i < values.length; i++) {
