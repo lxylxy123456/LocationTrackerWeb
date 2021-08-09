@@ -318,12 +318,12 @@
 		}
 		values.sort(cmp);
 		answer3.value += (
-			'Begin of local storage (' + values.length + ' lines)\n');
+			'# Begin of local storage (' + values.length + ' lines)\n');
 		for (let i = 0; i < values.length; i++) {
 			answer3.value += values[i][2];
 		}
 		answer3.value += (
-			'End of local storage (' + values.length + ' lines)\n');
+			'# End of local storage (' + values.length + ' lines)\n');
 	}
 	function clear_storage() {
 		if (confirm('Are you sure to clear local storage?')) {
